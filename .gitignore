@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+coverage
+.pnpm-store
+*.tsbuildinfo
+.claude
+.DS_Store
+*.png

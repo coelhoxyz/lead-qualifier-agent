@@ -1,0 +1,51 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+enum Status {
+  active
+  expired
+  qualified
+  rejected
+}
+
+enum FunnelStep {
+  collect_name
+  collect_birth_date
+  collect_weight_loss_reason
+  qualified
+  rejected
+}
+
+model Conversation {
+  id               String     @id @default(uuid())
+  phoneNumber      String     @unique
+  status           Status     @default(active)
+  funnelStep       FunnelStep @default(collect_name)
+  lastActivity     DateTime   @default(now())
+  createdAt        DateTime   @default(now())
+  finishedAt       DateTime?
+  name             String?
+  birthDate        DateTime?
+  weightLossReason String?
+  qualified        Boolean?
+  messages         Message[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  role           String
+  content        String
+  timestamp      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  @@index([conversationId])
+}
