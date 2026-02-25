@@ -168,10 +168,21 @@ export class ConversationService {
   private async createConversation(
     phoneNumber: string,
   ): Promise<Conversation> {
-    // Delete existing conversation for this phone number (if expired/finished)
-    await this.prisma.conversation.deleteMany({
+    // Delete existing messages and conversation for this phone number
+    const existing = await this.prisma.conversation.findMany({
       where: { phoneNumber },
+      select: { id: true },
     });
+
+    if (existing.length > 0) {
+      const ids = existing.map((c) => c.id);
+      await this.prisma.message.deleteMany({
+        where: { conversationId: { in: ids } },
+      });
+      await this.prisma.conversation.deleteMany({
+        where: { id: { in: ids } },
+      });
+    }
 
     return this.prisma.conversation.create({
       data: { phoneNumber },
