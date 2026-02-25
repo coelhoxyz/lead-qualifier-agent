@@ -1,8 +1,8 @@
 {
   "name": "lead-qualifier-agent",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "AI-powered lead qualification chatbot using LangGraph, NestJS, and pgvector for conversational funnel extraction and RAG-based scoring",
+  "author": "coelhoxyz",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
