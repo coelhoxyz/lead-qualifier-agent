@@ -154,6 +154,41 @@ Get current conversation state and extracted variables.
 
 Health check endpoint.
 
+## Roadmap
+
+### Human-in-the-Loop Review
+
+The current qualification step is fully automated — the agent qualifies or rejects a lead based solely on vector similarity score. A natural next step is adding human oversight for borderline cases.
+
+**Proposed approach using LangGraph's `interrupt()`:**
+
+When the similarity score falls in a gray zone (e.g., `0.15 < score ≤ 0.25`), the graph pauses and waits for a human decision before proceeding:
+
+```ts
+// qualify-lead.node.ts
+import { interrupt } from '@langchain/langgraph';
+
+if (topDistance > 0.15 && topDistance <= 0.25) {
+  const decision = interrupt({
+    message: 'Borderline lead — manual review required',
+    score: topDistance,
+    weightLossReason: state.weightLossReason,
+  });
+  return {
+    qualified: decision.approved,
+    funnelStep: decision.approved ? 'qualified' : 'rejected',
+  };
+}
+```
+
+**What this requires:**
+
+1. **Checkpointer** — persist the paused graph state between requests. LangGraph provides a Postgres-backed checkpointer (`@langchain/langgraph-checkpoint-postgres`) that fits the existing stack.
+2. **Review endpoint** — `POST /conversations/:phoneNumber/review` accepts `{ approved: boolean }` and resumes the graph via `graph.invoke(null, { thread_id })`.
+3. **Review queue UI** — a simple admin page listing paused conversations for human agents to approve or reject.
+
+**Why it matters:** Fully automated qualification can misfire on edge cases. Human review on the boundary improves lead quality without adding friction to the majority of conversations that fall clearly inside or outside the threshold.
+
 ## License
 
 UNLICENSED
