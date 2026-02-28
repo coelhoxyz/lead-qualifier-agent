@@ -6,7 +6,7 @@ import { createQualifyLeadNode } from './nodes/qualify-lead.node';
 import { createGenerateResponseNode } from './nodes/generate-response.node';
 import { VectorStoreService } from '../vector/vector-store.service';
 
-function routeAfterProcessing(state: FunnelState): string {
+export function routeAfterProcessing(state: FunnelState): string {
   if (
     state.funnelStep === 'collect_weight_loss_reason' &&
     state.weightLossReason
