@@ -137,7 +137,7 @@ body::before {
   border: 2px solid var(--bg-surface);
 }
 
-.chat-header .info h3 {
+.chat-header .info h1 {
   font-family: "Instrument Serif", serif;
   font-size: 18px;
   font-weight: 400;

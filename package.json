@@ -5,6 +5,14 @@
   "author": "coelhoxyz",
   "private": true,
   "license": "UNLICENSED",
+  "homepage": "https://github.com/coelhoxyz/lead-qualifier-agent#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coelhoxyz/lead-qualifier-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coelhoxyz/lead-qualifier-agent/issues"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
